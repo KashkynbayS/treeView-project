@@ -4,5 +4,5 @@ export interface TreeItem {
   id: string;
   children?: TreeItem[];
   isOpen?: boolean;
+  bgColor?: string;
 }
-  
