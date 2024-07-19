@@ -3,16 +3,24 @@ body {
 }
 
 button {
-  width: 140px;
+  display: flex;
+  align-items: center;
+  justify-content: start;
+  gap: 15px;
   height: 45px;
   font-weight: 600;
   font-size: 16px;
-  color: #308f18;
-  background-color: #fff;
+  color: #ffffff;
+  background-color: #51c560;
   border: none;
-  border-radius: 45px;
+  border-radius: 8px;
   box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
-  transition: all 0.3s ease 0s;
+  transition: all 0.1s ease 0s;
   cursor: pointer;
   outline: none;
+  padding: 0 20px;
+}
+
+button:disabled {
+  background-color: #d6d6d6;
 }
