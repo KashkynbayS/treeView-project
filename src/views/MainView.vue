@@ -17,8 +17,6 @@ const fetchTreeItems = async () => {
 const buildTree = (items: TreeItem[], openItems: string[]): TreeItem[] => {
   const map = new Map<string, TreeItem>();
 
-  console.log(items)
-
   items.forEach(item => {
     map.set(item.id, { ...item, children: [], isOpen: openItems.includes(item.id) });
   });
@@ -69,6 +67,6 @@ watch(treeItems, saveOpenItems, { deep: true });
 <template>
   <div>
     <button @click="reload">Reload Tree</button>
-    <TreeComponent :items="treeItems" />
+    <TreeComponent :items="treeItems" :parentColorIndex="0" :isRoot="true" />
   </div>
 </template>

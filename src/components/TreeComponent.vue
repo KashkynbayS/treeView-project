@@ -4,10 +4,19 @@ import { TreeItem } from '@/types/TreeItem';
 import ArrowIcon from '@/assets/icons/arrow.png';
 import HyphenIcon from '@/assets/icons/hyphen.png';
 
-const props = defineProps<{ items: TreeItem[]; startColorIndex?: number }>();
+const props = defineProps<{ items: TreeItem[], parentColorIndex: number, isRoot?: boolean }>();
 
 const rootItems = ref(props.items);
-const startColorIndex = ref(props.startColorIndex || 0);
+
+const colors = ['#f0f0f0', '#d0d0d0', '#a0a0a0'];
+
+const getItemColor = (parentColorIndex: number, currentIndex: number, isRoot: boolean) => {
+  if (isRoot) {
+    return colors[2];
+  } else {
+    return colors[(parentColorIndex + currentIndex) % 2];
+  }
+};
 
 watch(props, () => {
   rootItems.value = props.items;
@@ -19,22 +28,28 @@ const toggle = (item: TreeItem) => {
 </script>
 
 <template>
-  <div>
     <ul>
-      <li v-for="item in rootItems" :key="item.id" >
-        <div class="title-block" @click="toggle(item)">
-          <img 
-            :class="{ isOpen : item.isOpen && item.children?.length !== 0 }" 
-            :src="item.children?.length !== 0 ? ArrowIcon : HyphenIcon" 
+      <li v-for="(item, index) in rootItems" :key="item.id">
+        <div
+          class="title-block"
+          @click="toggle(item)"
+          :style="{ backgroundColor: getItemColor(props.parentColorIndex, index, props.isRoot) }"
+        >
+          <img
+            :class="{ isOpen: item.isOpen && item.children?.length !== 0 }"
+            :src="item.children?.length !== 0 ? ArrowIcon : HyphenIcon"
             alt="isOpenStatus"
-          >
+          />
           <span>{{ item.title }}</span>
-          <!-- <span :style="{ backgroundColor: item.bgColor || '#f0f0f0' }">{{ item.title }}</span> -->
         </div>
-        <TreeComponent v-if="item.isOpen && item.children" :items="item.children" :startColorIndex="startColorIndex" />
+        <TreeComponent
+          v-if="item.isOpen && item.children"
+          :items="item.children"
+          :parentColorIndex="(props.parentColorIndex + index + 1) % 2"
+          :isRoot="false"
+        />
       </li>
     </ul>
-  </div>
 </template>
 
 <style scoped>
@@ -46,6 +61,13 @@ li {
     display: flex;
     align-items: center;
     gap: 10px;
+    font-weight: 500;
+    cursor: pointer;
+    padding: 5px;
+
+    span {
+      display: inline-block;
+    }
 
     img {
       width: 10px;
